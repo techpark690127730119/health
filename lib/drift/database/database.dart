@@ -14,9 +14,15 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 @DriftDatabase(tables: [HealthRoutine])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
-
-  Future<void> createSchedule(HealthRoutineCompanion data) =>
+  
+  
+  Future<void> addRoutine({required HealthRoutineCompanion data}) =>
       into(healthRoutine).insert(data);
+
+  Stream<List<HealthRoutineData>> watchRoutine({required int dayId}) {
+    return (select(healthRoutine)..where((tbl) => tbl.dayId.equals(dayId)))
+        .watch();
+  }
 
   @override
   int get schemaVersion => 1;

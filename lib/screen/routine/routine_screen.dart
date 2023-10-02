@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_plans/common/widgets/app_text.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:health_plans/screen/routine/component/calendar.dart';
+// import 'package:health_plans/screen/routine/component/plans.dart';
 import '../../common/widgets/app_colors.dart';
 import '../../common/widgets/app_padding.dart';
 import '../../provider/calendar/calendar_provider.dart';
 import '../setting/setting_screen.dart';
+import 'component/routines.dart';
 
 final navigationbarProvider = StateProvider<int>((ref) {
   return 0;
@@ -77,69 +78,30 @@ class RoutineScreen extends StatelessWidget {
   }
 
   Widget _loadBody({required BuildContext context}) {
-    final size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: AppPadding.only(8, 8, 16, 0),
-            width: size.width,
-            height: size.height * 0.5,
-            child: const Calendar(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Calendar extends ConsumerWidget {
-  const Calendar({super.key});
-
-  TextStyle _calendarTextStyle({required Color color}) {
-    return TextStyle(
-      color: color,
-      fontSize: 18.sp,
-      fontWeight: FontWeight.w500,
-      fontFamily: "main",
-    );
-  }
-
-  BoxDecoration _calendarBoxDeco({required Color color}) {
-    return BoxDecoration(
-      color: color,
-      shape: BoxShape.circle,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final calendarState = ref.watch(calendarProvider);
-    final calendarStateNotifier = ref.read(calendarProvider.notifier);
-    return TableCalendar(
-      locale: "ko_KR",
-      firstDay: DateTime.utc(2022, 9, 25),
-      lastDay: DateTime.utc(2050, 12, 25),
-      focusedDay: calendarState.focusedDate,
-      headerVisible: false,
-      calendarStyle: CalendarStyle(
-        todayDecoration: _calendarBoxDeco(color: red),
-        selectedDecoration: _calendarBoxDeco(color: red),
-        defaultTextStyle: _calendarTextStyle(color: white),
-        todayTextStyle: _calendarTextStyle(color: white),
-        weekendTextStyle: _calendarTextStyle(color: red),
-        selectedTextStyle: _calendarTextStyle(color: white),
-      ),
-      selectedDayPredicate: (day) {
-        return calendarState.selectedDay == day ? true : false;
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        calendarStateNotifier.selectDate(selectedDay);
-      },
-      onPageChanged: (currentPage) {
-        calendarStateNotifier.onPageChanged(currentPage: currentPage);
-      },
+    return ListView(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      children: [
+        Container(
+          padding: AppPadding.symmetric(8, 16),
+          child: const Calendar(),
+        ),
+        // Container(
+        //   margin: AppPadding.symmetric(8, 8),
+        //   color: white,
+        //   height: 0.3,
+        // ),
+        // const Plans(),
+        Container(
+          margin: AppPadding.symmetric(8, 8),
+          color: white,
+          height: 0.3,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: const Routines(),
+        ),
+      ],
     );
   }
 }

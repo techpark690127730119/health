@@ -18,6 +18,16 @@ class $HealthRoutineTable extends HealthRoutine
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _dayIdMeta = const VerificationMeta('dayId');
+  @override
+  late final GeneratedColumn<int> dayId = GeneratedColumn<int>(
+      'day_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _partMeta = const VerificationMeta('part');
   @override
   late final GeneratedColumn<String> part = GeneratedColumn<String>(
@@ -41,7 +51,7 @@ class $HealthRoutineTable extends HealthRoutine
       'set', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, part, exercise, set];
+  List<GeneratedColumn> get $columns => [id, date, dayId, part, exercise, set];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -54,6 +64,18 @@ class $HealthRoutineTable extends HealthRoutine
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('day_id')) {
+      context.handle(
+          _dayIdMeta, dayId.isAcceptableOrUnknown(data['day_id']!, _dayIdMeta));
+    } else if (isInserting) {
+      context.missing(_dayIdMeta);
     }
     if (data.containsKey('part')) {
       context.handle(
@@ -84,6 +106,10 @@ class $HealthRoutineTable extends HealthRoutine
     return HealthRoutineData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      dayId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}day_id'])!,
       part: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}part'])!,
       exercise: attachedDatabase.typeMapping
@@ -102,11 +128,15 @@ class $HealthRoutineTable extends HealthRoutine
 class HealthRoutineData extends DataClass
     implements Insertable<HealthRoutineData> {
   final int id;
+  final DateTime date;
+  final int dayId;
   final String part;
   final String exercise;
   final int set;
   const HealthRoutineData(
       {required this.id,
+      required this.date,
+      required this.dayId,
       required this.part,
       required this.exercise,
       required this.set});
@@ -114,6 +144,8 @@ class HealthRoutineData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['date'] = Variable<DateTime>(date);
+    map['day_id'] = Variable<int>(dayId);
     map['part'] = Variable<String>(part);
     map['exercise'] = Variable<String>(exercise);
     map['set'] = Variable<int>(set);
@@ -123,6 +155,8 @@ class HealthRoutineData extends DataClass
   HealthRoutineCompanion toCompanion(bool nullToAbsent) {
     return HealthRoutineCompanion(
       id: Value(id),
+      date: Value(date),
+      dayId: Value(dayId),
       part: Value(part),
       exercise: Value(exercise),
       set: Value(set),
@@ -134,6 +168,8 @@ class HealthRoutineData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return HealthRoutineData(
       id: serializer.fromJson<int>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      dayId: serializer.fromJson<int>(json['dayId']),
       part: serializer.fromJson<String>(json['part']),
       exercise: serializer.fromJson<String>(json['exercise']),
       set: serializer.fromJson<int>(json['set']),
@@ -144,6 +180,8 @@ class HealthRoutineData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'dayId': serializer.toJson<int>(dayId),
       'part': serializer.toJson<String>(part),
       'exercise': serializer.toJson<String>(exercise),
       'set': serializer.toJson<int>(set),
@@ -151,9 +189,16 @@ class HealthRoutineData extends DataClass
   }
 
   HealthRoutineData copyWith(
-          {int? id, String? part, String? exercise, int? set}) =>
+          {int? id,
+          DateTime? date,
+          int? dayId,
+          String? part,
+          String? exercise,
+          int? set}) =>
       HealthRoutineData(
         id: id ?? this.id,
+        date: date ?? this.date,
+        dayId: dayId ?? this.dayId,
         part: part ?? this.part,
         exercise: exercise ?? this.exercise,
         set: set ?? this.set,
@@ -162,6 +207,8 @@ class HealthRoutineData extends DataClass
   String toString() {
     return (StringBuffer('HealthRoutineData(')
           ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('dayId: $dayId, ')
           ..write('part: $part, ')
           ..write('exercise: $exercise, ')
           ..write('set: $set')
@@ -170,12 +217,14 @@ class HealthRoutineData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, part, exercise, set);
+  int get hashCode => Object.hash(id, date, dayId, part, exercise, set);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is HealthRoutineData &&
           other.id == this.id &&
+          other.date == this.date &&
+          other.dayId == this.dayId &&
           other.part == this.part &&
           other.exercise == this.exercise &&
           other.set == this.set);
@@ -183,31 +232,43 @@ class HealthRoutineData extends DataClass
 
 class HealthRoutineCompanion extends UpdateCompanion<HealthRoutineData> {
   final Value<int> id;
+  final Value<DateTime> date;
+  final Value<int> dayId;
   final Value<String> part;
   final Value<String> exercise;
   final Value<int> set;
   const HealthRoutineCompanion({
     this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.dayId = const Value.absent(),
     this.part = const Value.absent(),
     this.exercise = const Value.absent(),
     this.set = const Value.absent(),
   });
   HealthRoutineCompanion.insert({
     this.id = const Value.absent(),
+    required DateTime date,
+    required int dayId,
     required String part,
     required String exercise,
     required int set,
-  })  : part = Value(part),
+  })  : date = Value(date),
+        dayId = Value(dayId),
+        part = Value(part),
         exercise = Value(exercise),
         set = Value(set);
   static Insertable<HealthRoutineData> custom({
     Expression<int>? id,
+    Expression<DateTime>? date,
+    Expression<int>? dayId,
     Expression<String>? part,
     Expression<String>? exercise,
     Expression<int>? set,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (dayId != null) 'day_id': dayId,
       if (part != null) 'part': part,
       if (exercise != null) 'exercise': exercise,
       if (set != null) 'set': set,
@@ -216,11 +277,15 @@ class HealthRoutineCompanion extends UpdateCompanion<HealthRoutineData> {
 
   HealthRoutineCompanion copyWith(
       {Value<int>? id,
+      Value<DateTime>? date,
+      Value<int>? dayId,
       Value<String>? part,
       Value<String>? exercise,
       Value<int>? set}) {
     return HealthRoutineCompanion(
       id: id ?? this.id,
+      date: date ?? this.date,
+      dayId: dayId ?? this.dayId,
       part: part ?? this.part,
       exercise: exercise ?? this.exercise,
       set: set ?? this.set,
@@ -232,6 +297,12 @@ class HealthRoutineCompanion extends UpdateCompanion<HealthRoutineData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (dayId.present) {
+      map['day_id'] = Variable<int>(dayId.value);
     }
     if (part.present) {
       map['part'] = Variable<String>(part.value);
@@ -249,6 +320,8 @@ class HealthRoutineCompanion extends UpdateCompanion<HealthRoutineData> {
   String toString() {
     return (StringBuffer('HealthRoutineCompanion(')
           ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('dayId: $dayId, ')
           ..write('part: $part, ')
           ..write('exercise: $exercise, ')
           ..write('set: $set')

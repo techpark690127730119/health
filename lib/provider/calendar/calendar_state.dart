@@ -1,19 +1,19 @@
 class CalendarState {
   final DateTime focusedDate;
-  final DateTime? selectedDay;
+  final DateTime selectedDate;
 
   CalendarState({
     required this.focusedDate,
-    this.selectedDay,
+    required this.selectedDate,
   });
 
   CalendarState copyWith({
     DateTime? focusedDate,
-    DateTime? selectedDay,
+    DateTime? selectedDate,
   }) {
     return CalendarState(
       focusedDate: focusedDate ?? this.focusedDate,
-      selectedDay: selectedDay ?? this.selectedDay,
+      selectedDate: selectedDate ?? this.selectedDate,
     );
   }
 }
