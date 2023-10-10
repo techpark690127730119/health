@@ -14,11 +14,12 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 @DriftDatabase(tables: [HealthRoutine])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
-  
-  
+
+  // 루틴 추가 함수
   Future<void> addRoutine({required HealthRoutineCompanion data}) =>
       into(healthRoutine).insert(data);
 
+  // 루틴 확인 함수
   Stream<List<HealthRoutineData>> watchRoutine({required int dayId}) {
     return (select(healthRoutine)..where((tbl) => tbl.dayId.equals(dayId)))
         .watch();

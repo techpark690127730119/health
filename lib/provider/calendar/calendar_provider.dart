@@ -25,20 +25,20 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
           ),
         );
 
-  /**
-   * 날짜를 선택하는 함수입니다.
-   */
-  void selectDate(DateTime date) {
-    state = state.copyWith(focusedDate: date, selectedDate: date);
-  }
-
-  /**
-   * 현재 페이지를 변경하는 함수입니다.
-   */
+  // 페이지 변경 함수
   void onPageChanged({required DateTime currentPage}) {
     state = state.copyWith(focusedDate: currentPage);
   }
 
+  // 날짜 선택 함수
+  void selectDate(DateTime date) {
+    state = state.copyWith(
+      focusedDate: date,
+      selectedDate: date,
+    );
+  }
+
+  // 요일 선택 함수
   String selectedDay({required DateTime selectedDate}) {
     switch (selectedDate.weekday) {
       case 1:
@@ -60,9 +60,7 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
     }
   }
 
-  /**
-   * 루틴을 추가하는 함수입니다.
-   */
+  // 루틴 추가 함수
   void addRoutine() {
     appDatabase.addRoutine(
       data: HealthRoutineCompanion.insert(
@@ -73,9 +71,9 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
         set: 2,
       ),
     );
-    
   }
 
+  // 루틴 확인 함수
   Stream<List<HealthRoutineData>> watchRoutine({required int dayId}) {
     return appDatabase.watchRoutine(dayId: dayId);
   }

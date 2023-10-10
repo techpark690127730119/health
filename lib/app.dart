@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_plans/screen/routine/routine_screen.dart';
 
-import 'common/widgets/app_colors.dart';
+import 'common/widget/app_color.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -21,7 +21,7 @@ class _AppState extends State<App> {
       routes: [
         GoRoute(
           path: "/",
-          builder: (context, state) => const NavigationBars(),
+          builder: (context, state) => const NavigationBarScreen(),
         ),
       ],
     );
