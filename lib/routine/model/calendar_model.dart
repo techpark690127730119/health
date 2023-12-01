@@ -1,17 +1,17 @@
-class CalendarState {
+class CalendarModel {
   final DateTime focusedDate;
   final DateTime selectedDate;
 
-  CalendarState({
+  CalendarModel({
     required this.focusedDate,
     required this.selectedDate,
   });
 
-  CalendarState copyWith({
+  CalendarModel copyWith({
     DateTime? focusedDate,
     DateTime? selectedDate,
   }) {
-    return CalendarState(
+    return CalendarModel(
       focusedDate: focusedDate ?? this.focusedDate,
       selectedDate: selectedDate ?? this.selectedDate,
     );

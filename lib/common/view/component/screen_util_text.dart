@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'app_color.dart';
+import '../../const/colors.dart';
 
-class AppText extends StatelessWidget {
+class ScreenUtilText extends StatelessWidget {
   final String text;
   final Color? color;
   final double? size;
@@ -10,7 +10,7 @@ class AppText extends StatelessWidget {
   final TextAlign? textAlign;
   final int? maxLines;
   final TextOverflow? textOverflow;
-  const AppText(
+  const ScreenUtilText(
     this.text, {
     this.color,
     this.size = 16,

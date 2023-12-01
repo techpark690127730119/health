@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AppPadding {
+class ScreenUtilPadding {
   static EdgeInsets symmetric(double horizontal, double vertical) {
     return EdgeInsets.symmetric(
       horizontal: horizontal.w,
@@ -18,7 +18,12 @@ class AppPadding {
     );
   }
 
-    static EdgeInsets keyboardPadding(double left, double right, double top, double bottom) {
+  static EdgeInsets keyboardPadding(
+    double left,
+    double right,
+    double top,
+    double bottom,
+  ) {
     return EdgeInsets.only(
       left: left.w,
       right: right.w,
