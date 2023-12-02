@@ -18,6 +18,10 @@ class RoutineStateNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final AppDatabase appDatabase;
   RoutineStateNotifier({required this.appDatabase}) : super([]);
 
+  void reset() {
+    state = [];
+  }
+
   void setSet({
     ExerciseData? exerciseData,
     CalendarModel? calendarModel,
@@ -124,7 +128,7 @@ class RoutineStateNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
       i++;
     }
-    
+
     state = [];
   }
 

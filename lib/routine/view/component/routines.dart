@@ -87,7 +87,7 @@ class Routines extends ConsumerWidget {
         final routine = routines[index];
         return GestureDetector(
           onTap: () {
-             context.push("/update_routine_screen");
+            context.push("/update_routine_screen");
           },
           child: Padding(
             padding: ScreenUtilPadding.symmetric(0, 8),

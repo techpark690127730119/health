@@ -24,13 +24,14 @@ class ExerciseCard extends ConsumerStatefulWidget {
 }
 
 class _ExerciseCardState extends ConsumerState<ExerciseCard> {
-  int set = 0;
   @override
   Widget build(BuildContext context) {
     if (widget.isRoutine != null) {
       return Column(
+        // 1. 부위 받아서 부위에 해당하는 운동 검색해서 가져옴
         children: ref.watch(exerciseStreamProvider(widget.part)).when(
               data: (exercise) {
+                // 2. 운동 가져와서 _renderExerciseCard로 맵핑
                 return exercise
                     .map((e) => Container(
                           width: MediaQuery.of(context).size.width,
@@ -94,6 +95,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
     bool? isRoutine,
   }) {
     if (isRoutine != null) {
+      // 1. 운동이랑 세트 조절 버튼 가로로 배치
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -104,7 +106,7 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
               size: 18,
             ),
           ),
-          _renderSetButton(exerciseData: exerciseData)
+          SetButton(exerciseData: exerciseData)
         ],
       );
     }
@@ -117,19 +119,36 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
       ),
     );
   }
+}
 
-  Widget _renderSetButton({required ExerciseData exerciseData}) {
+class SetButton extends ConsumerStatefulWidget {
+  final ExerciseData exerciseData;
+  const SetButton({required this.exerciseData, super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SetButtonState();
+}
+
+class _SetButtonState extends ConsumerState<SetButton> {
+  int set = 0;
+  @override
+  Widget build(BuildContext context) {
     final calendarState = ref.read(calendarProvider);
+
+    // -, 세트 수, + 버튼 가로로  배치
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            ref.read(routineProvider.notifier).setSet(
-                calendarModel: calendarState,
-                exerciseData: exerciseData,
-                isMinus: true);
             if (set > 0) {
               setState(() {
+                // 변경 사항 저장
+                ref.read(routineProvider.notifier).setSet(
+                      calendarModel: calendarState,
+                      exerciseData: widget.exerciseData,
+                      isMinus: true,
+                    );
+                // 세트 수 마이너스 1
                 set--;
               });
             }
@@ -148,11 +167,13 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
         ),
         GestureDetector(
           onTap: () {
-            ref.read(routineProvider.notifier).setSet(
-                  calendarModel: calendarState,
-                  exerciseData: exerciseData,
-                );
             setState(() {
+              // 변경 사항 저장
+              ref.read(routineProvider.notifier).setSet(
+                    calendarModel: calendarState,
+                    exerciseData: widget.exerciseData,
+                  );
+              // 세트 수 플러스 1
               set++;
             });
           },

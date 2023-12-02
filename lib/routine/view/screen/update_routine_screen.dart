@@ -23,6 +23,10 @@ class UpdateRoutineScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
+      onWillPop: () async {
+        ref.read(routineProvider.notifier).reset();
+        return true;
+      },
       appBar: _renderAppBar(context: context, ref: ref),
       child: FutureBuilder(
         future: getAllRoutines(ref: ref),

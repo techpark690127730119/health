@@ -18,9 +18,17 @@ class AddRoutineScreen extends ConsumerWidget {
     final defaultPart = ["가슴", "등", "어깨", "하체", "팔"];
 
     return DefaultLayout(
+      onWillPop: () async {
+        ref.read(routineProvider.notifier).reset();
+        return true;
+      },
       appBar: _renderAppBar(context, ref),
+      // 1. 세로로 스크롤 가능하게 배치
       child: ListView(
         children: [
+          // 2. 기본 부위 Column으로 맵핑
+          // 3. PartBar = 부위 이름 보여줌
+          // 4. ExerciseCard = 부위에 해당하는 운동 보여줌
           ...defaultPart
               .map(
                 (e) => Column(
