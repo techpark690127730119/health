@@ -131,6 +131,7 @@ class SetButton extends ConsumerStatefulWidget {
 
 class _SetButtonState extends ConsumerState<SetButton> {
   int set = 0;
+
   @override
   Widget build(BuildContext context) {
     final calendarState = ref.read(calendarProvider);

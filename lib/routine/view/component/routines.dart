@@ -25,18 +25,23 @@ class Routines extends ConsumerWidget {
     final String selectedDay = ref
         .watch(calendarProvider.notifier)
         .selectedDay(selectedDate: selectedDate);
-
+    
+    // 1. 해당 요일에 저장된 루틴 가져오기
     return ref.watch(routineStreamProvider(selectedDate.weekday)).when(
+          // 2. 루틴을 가져왔으면 Column으로 배치 
           data: (routines) => Container(
             height: size.height,
             padding: ScreenUtilPadding.symmetric(12, 8),
             child: Column(
               children: [
+                // 요일 + 루틴 추가 버튼
                 _renderTopBar(
                   context: context,
                   selectedDay: selectedDay,
                 ),
+                // 공간
                 SizedBox(height: 8.h),
+                // 나머지 공간엔 (Expanded) 루틴 카드
                 Expanded(
                   child: _renderRoutineCard(
                     routines: routines,
@@ -81,6 +86,7 @@ class Routines extends ConsumerWidget {
     required WidgetRef ref,
     required List<HealthRoutineData> routines,
   }) {
+    // 여러 개의 루틴을 itemCount 만큼 itemBuilder로 감싸서 리턴해 준다.
     return ListView.builder(
       itemCount: routines.length,
       itemBuilder: (context, index) {

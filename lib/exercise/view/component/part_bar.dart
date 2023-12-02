@@ -11,6 +11,7 @@ class PartBar extends ConsumerWidget {
   final bool? isRoutine;
   final String part;
   final PartData? partData;
+  
   const PartBar({
     this.isRoutine,
     required this.part,
