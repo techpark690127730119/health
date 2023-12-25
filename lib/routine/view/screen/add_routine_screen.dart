@@ -37,7 +37,7 @@ class AddRoutineScreen extends ConsumerWidget {
                       part: e,
                       isRoutine: true,
                     ),
-                    ExerciseCard(
+                    Exercises(
                       part: e,
                       isRoutine: true,
                     ),
@@ -55,7 +55,7 @@ class AddRoutineScreen extends ConsumerWidget {
                                 partData: e,
                                 isRoutine: true,
                               ),
-                              ExerciseCard(
+                              Exercises(
                                 part: e.part,
                                 isRoutine: true,
                               ),

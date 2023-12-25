@@ -125,54 +125,58 @@ class __RoutinesState extends ConsumerState<_Routines> {
             widget.exercise,
             size: 18,
           ),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  if (set > 0) {
-                    setState(() {
-                      set--;
-                      ref.read(routineProvider.notifier).setSet(
-                            exercise: widget.exercise,
-                            calendarModel: ref.read(calendarProvider),
-                            set: set,
-                            isMinus: true,
-                          );
-                    });
-                  }
-                },
-                child: const Icon(
-                  Icons.remove,
-                  color: white,
-                ),
-              ),
-              Padding(
-                padding: ScreenUtilPadding.symmetric(6, 0),
-                child: ScreenUtilText(
-                  set.toString(),
-                  size: 18,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    set++;
-                    ref.read(routineProvider.notifier).setSet(
-                          exercise: widget.exercise,
-                          calendarModel: ref.read(calendarProvider),
-                          set: set,
-                        );
-                  });
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: white,
-                ),
-              ),
-            ],
-          ),
+          renderSetButton(),
         ],
       ),
+    );
+  }
+
+  Row renderSetButton() {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (set > 0) {
+              setState(() {
+                set--;
+                ref.read(routineProvider.notifier).setSet(
+                      exercise: widget.exercise,
+                      calendarModel: ref.read(calendarProvider),
+                      set: set,
+                      isMinus: true,
+                    );
+              });
+            }
+          },
+          child: const Icon(
+            Icons.remove,
+            color: white,
+          ),
+        ),
+        Padding(
+          padding: ScreenUtilPadding.symmetric(6, 0),
+          child: ScreenUtilText(
+            set.toString(),
+            size: 18,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              set++;
+              ref.read(routineProvider.notifier).setSet(
+                    exercise: widget.exercise,
+                    calendarModel: ref.read(calendarProvider),
+                    set: set,
+                  );
+            });
+          },
+          child: const Icon(
+            Icons.add,
+            color: white,
+          ),
+        ),
+      ],
     );
   }
 }

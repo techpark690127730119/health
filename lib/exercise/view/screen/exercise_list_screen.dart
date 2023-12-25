@@ -26,7 +26,7 @@ class ExerciseListScreen extends ConsumerWidget {
                 (e) => Column(
                   children: [
                     PartBar(part: e),
-                    ExerciseCard(part: e),
+                    Exercises(part: e),
                   ],
                 ),
               )
@@ -51,7 +51,7 @@ class ExerciseListScreen extends ConsumerWidget {
                               Dismissible(
                                 key: ObjectKey("${e}2"),
                                 onDismissed: (direction) {},
-                                child: ExerciseCard(part: e.part),
+                                child: Exercises(part: e.part),
                               ),
                             ],
                           ))

@@ -9,21 +9,21 @@ import 'package:health_plans/exercise/provider/exercise_provider.dart';
 import 'package:health_plans/routine/provider/calendar_provider.dart';
 import 'package:health_plans/routine/provider/routine_proivder.dart';
 
-class ExerciseCard extends ConsumerStatefulWidget {
+class Exercises extends ConsumerStatefulWidget {
   final bool? isRoutine;
   final String part;
 
-  const ExerciseCard({
+  const Exercises({
     this.isRoutine,
     required this.part,
     super.key,
   });
 
   @override
-  ConsumerState<ExerciseCard> createState() => _ExerciseCardState();
+  ConsumerState<Exercises> createState() => _ExerciseCardState();
 }
 
-class _ExerciseCardState extends ConsumerState<ExerciseCard> {
+class _ExerciseCardState extends ConsumerState<Exercises> {
   @override
   Widget build(BuildContext context) {
     if (widget.isRoutine != null) {

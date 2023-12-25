@@ -25,10 +25,10 @@ class Routines extends ConsumerWidget {
     final String selectedDay = ref
         .watch(calendarProvider.notifier)
         .selectedDay(selectedDate: selectedDate);
-    
+
     // 1. 해당 요일에 저장된 루틴 가져오기
     return ref.watch(routineStreamProvider(selectedDate.weekday)).when(
-          // 2. 루틴을 가져왔으면 Column으로 배치 
+          // 2. 루틴을 가져왔으면 Column으로 배치
           data: (routines) => Container(
             height: size.height,
             padding: ScreenUtilPadding.symmetric(12, 8),
@@ -43,7 +43,7 @@ class Routines extends ConsumerWidget {
                 SizedBox(height: 8.h),
                 // 나머지 공간엔 (Expanded) 루틴 카드
                 Expanded(
-                  child: _renderRoutineCard(
+                  child: _renderRoutines(
                     routines: routines,
                     ref: ref,
                   ),
@@ -82,7 +82,7 @@ class Routines extends ConsumerWidget {
     );
   }
 
-  Widget _renderRoutineCard({
+  Widget _renderRoutines({
     required WidgetRef ref,
     required List<HealthRoutineData> routines,
   }) {
