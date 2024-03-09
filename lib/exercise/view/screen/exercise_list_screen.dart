@@ -2,75 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:health_plans/common/const/colors.dart';
+import 'package:health_plans/common/const/data.dart';
 import 'package:health_plans/common/layout/default_layout.dart';
 import 'package:health_plans/common/view/component/screen_util_padding.dart';
 import 'package:health_plans/common/view/component/screen_util_text.dart';
+import 'package:health_plans/drift/database/database.dart';
 import 'package:health_plans/exercise/provider/exercise_provider.dart';
 import 'package:health_plans/exercise/view/component/part_bar.dart';
-
+import 'package:health_plans/exercise/view/screen/add_part_screen.dart';
 import '../component/exercise_card.dart';
 
 class ExerciseListScreen extends ConsumerWidget {
-  const ExerciseListScreen({super.key});
+  const ExerciseListScreen({
+    super.key,
+  });
+
+  void goAddPartScreen(BuildContext context) {
+    context.go(
+      AddPartScreen.PATH,
+    );
+  }
+
+  void deletePart(
+    WidgetRef ref, {
+    required PartData partData,
+  }) {
+    ref
+        .read(
+          exerciseProvider.notifier,
+        )
+        .deletePart(
+          id: partData.id,
+        );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defaultPart = ["가슴", "등", "어깨", "하체", "팔"];
-
     return DefaultLayout(
-      appBar: _renderAppBar(context),
+      appBar: renderAppBar(
+        context,
+      ),
       child: ListView(
         children: [
-          ...defaultPart
-              .map(
-                (e) => Column(
-                  children: [
-                    PartBar(part: e),
-                    Exercises(part: e),
-                  ],
-                ),
-              )
-              .toList(),
-          ...ref.watch(partStreamProvider).when(
-                data: (data) {
-                  return data
-                      .map((e) => Column(
-                            children: [
-                              Dismissible(
-                                key: ObjectKey(e),
-                                onDismissed: (direction) {
-                                  ref
-                                      .read(exerciseProvider.notifier)
-                                      .deletePart(id: e.id);
-                                },
-                                child: PartBar(
-                                  part: e.part,
-                                  partData: e,
-                                ),
-                              ),
-                              Dismissible(
-                                key: ObjectKey("${e}2"),
-                                onDismissed: (direction) {},
-                                child: Exercises(part: e.part),
-                              ),
-                            ],
-                          ))
-                      .toList();
-                },
-                error: (error, stackTrace) => [
-                  const SizedBox(),
-                ],
-                loading: () => [
-                  const SizedBox(),
-                ],
-              ),
-          renderAddPartButton(context),
+          ...renderDefaultParts(),
+          ...renderCustomParts(
+            ref,
+          ),
+          renderAddPartButton(
+            context,
+          ),
         ],
       ),
     );
   }
 
-  PreferredSizeWidget _renderAppBar(BuildContext context) {
+  PreferredSizeWidget renderAppBar(BuildContext context) {
     return AppBar(
       title: const ScreenUtilText(
         "운동 목록",
@@ -80,14 +66,110 @@ class ExerciseListScreen extends ConsumerWidget {
     );
   }
 
+  // ...defaultPart
+  //           .map(
+  //             (e) => Column(
+  //               children: [
+  //                 PartBar(part: e),
+  //                 Exercises(part: e),
+  //               ],
+  //             ),
+  //           )
+  //           .toList()
+
+  List<Widget> renderDefaultParts() {
+    return Data.defaultPart.map((defaultPart) {
+      return Column(
+        children: [
+          PartBar.constant(
+            part: defaultPart,
+          ),
+          renderExercise(
+            part: defaultPart,
+          ),
+        ],
+      );
+    }).toList();
+  }
+
+  Widget renderExercise({
+    required String part,
+  }) {
+    return Exercises(
+      part: part,
+    );
+  }
+
+  List<Widget> renderCustomParts(WidgetRef ref) {
+    return ref
+        .watch(
+          partStreamProvider,
+        )
+        .when(
+          data: (partDataList) {
+            return partDataList.map(
+              (partData) {
+                return Column(
+                  children: [
+                    renderDismissiblePart(
+                      ref,
+                      partData: partData,
+                    ),
+                    renderExercise(
+                      part: partData.part,
+                    ),
+                  ],
+                );
+              },
+            ).toList();
+          },
+          error: (error, stackTrace) => [
+            const SizedBox(),
+          ],
+          loading: () => [
+            const SizedBox(),
+          ],
+        );
+  }
+
+  Widget renderDismissiblePart(
+    WidgetRef ref, {
+    required PartData partData,
+  }) {
+    return Dismissible(
+      key: ObjectKey(
+        partData,
+      ),
+      onDismissed: (direction) => deletePart(
+        ref,
+        partData: partData,
+      ),
+      child: PartBar.custom(
+        part: partData.part,
+        partData: partData,
+      ),
+    );
+  }
+
   Widget renderAddPartButton(BuildContext context) {
+    const double horizontalMargin = 0;
+    const double verticalMargin = 24;
+    const double horizontalPadding = 0;
+    const double verticalPadding = 16;
+
     return GestureDetector(
-      onTap: () {
-        context.go("/exercise_screen/add_part_screen");
-      },
+      onTap: () => goAddPartScreen(
+        context,
+      ),
       child: Container(
-        margin: ScreenUtilPadding.symmetric(0, 24),
-        padding: ScreenUtilPadding.symmetric(0, 16),
+        margin: ScreenUtilPadding.symmetric(
+          horizontalMargin,
+          verticalMargin,
+        ),
+        padding: ScreenUtilPadding.symmetric(
+          horizontalPadding,
+          verticalPadding,
+        ),
         decoration: BoxDecoration(
           color: white,
           borderRadius: BorderRadius.circular(12),

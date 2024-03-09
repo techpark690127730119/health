@@ -1,5 +1,8 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../common/const/colors.dart';
@@ -9,15 +12,34 @@ import '../../../common/view/component/custom_text_form_field.dart';
 import '../../../common/view/component/screen_util_text.dart';
 import '../../provider/exercise_provider.dart';
 
-class UpdatePartScreen extends ConsumerWidget {
-  const UpdatePartScreen({super.key});
+class UpdatePartScreen extends HookConsumerWidget {
+  UpdatePartScreen({
+    super.key,
+  });
+
+  static const String PATH = "/exercise_screen/update_part_screen";
+  static const String ROUTE_NAME = "UpdatePartScreen";
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController textEditingController =
+        useTextEditingController();
+
+    useListenableSelector(
+      textEditingController,
+      () => null,
+    );
+
     return DefaultLayout(
-      appBar: _renderAppBar(context: context, ref: ref),
+      appBar: _renderAppBar(
+        context,
+        ref,
+        textEditingController: textEditingController,
+      ),
       child: Form(
-        key: formKey1,
+        key: formKey,
         child: Column(
           children: [
             CustomTextFormField(
@@ -30,9 +52,10 @@ class UpdatePartScreen extends ConsumerWidget {
     );
   }
 
-  PreferredSizeWidget _renderAppBar({
-    required BuildContext context,
-    required WidgetRef ref,
+  PreferredSizeWidget _renderAppBar(
+    BuildContext context,
+    WidgetRef ref, {
+    required TextEditingController textEditingController,
   }) {
     return AppBar(
       title: Row(
@@ -46,11 +69,11 @@ class UpdatePartScreen extends ConsumerWidget {
           GestureDetector(
             onTap: () {
               ref.read(formSubmitHelperProvider).submitForm(
-                    formKey: formKey1,
+                    formKey: formKey,
                     onSubmit: () {
                       ref.read(exerciseProvider.notifier).updatePart(
                             id: ref.read(exerciseProvider).partData!.id,
-                            newPart: ref.read(partValidatorProvider).part,
+                            newPart: textEditingController.text.trim(),
                           );
                       context.pop();
                     },

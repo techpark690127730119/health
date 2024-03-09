@@ -33,19 +33,25 @@ final GoRouter goRouter = GoRouter(
           routes: [
             GoRoute(
               path: "add_part_screen",
-              builder: (context, state) => const AddPartScreen(),
+              builder: (context, state) => AddPartScreen(),
             ),
             GoRoute(
               path: "update_part_screen",
-              builder: (context, state) => const UpdatePartScreen(),
+              builder: (context, state) {
+                return UpdatePartScreen();
+              },
             ),
             GoRoute(
               path: "add_exercise_screen",
-              builder: (context, state) => const AddExerciseScreen(),
+              builder: (context, state) {
+                return AddExerciseScreen(
+                  part: state.extra as String,
+                );
+              },
             ),
             GoRoute(
               path: "update_exercise_screen",
-              builder: (context, state) => const UpdateExerciseScreen(),
+              builder: (context, state) => UpdateExerciseScreen(),
             ),
           ],
         ),

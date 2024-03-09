@@ -11,7 +11,9 @@ import '../../../exercise/view/component/exercise_card.dart';
 import '../../../exercise/view/component/part_bar.dart';
 
 class AddRoutineScreen extends ConsumerWidget {
-  const AddRoutineScreen({super.key});
+  const AddRoutineScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,9 +35,8 @@ class AddRoutineScreen extends ConsumerWidget {
               .map(
                 (e) => Column(
                   children: [
-                    PartBar(
+                    PartBar.routine(
                       part: e,
-                      isRoutine: true,
                     ),
                     Exercises(
                       part: e,
@@ -48,19 +49,19 @@ class AddRoutineScreen extends ConsumerWidget {
           ...ref.watch(partStreamProvider).when(
                 data: (data) {
                   return data
-                      .map((e) => Column(
-                            children: [
-                              PartBar(
-                                part: e.part,
-                                partData: e,
-                                isRoutine: true,
-                              ),
-                              Exercises(
-                                part: e.part,
-                                isRoutine: true,
-                              ),
-                            ],
-                          ))
+                      .map(
+                        (e) => Column(
+                          children: [
+                            PartBar.routine(
+                              part: e.part,
+                            ),
+                            Exercises(
+                              part: e.part,
+                              isRoutine: true,
+                            ),
+                          ],
+                        ),
+                      )
                       .toList();
                 },
                 error: (error, stackTrace) => [

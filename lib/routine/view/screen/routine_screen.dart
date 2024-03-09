@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health_plans/routine/view/screen/routine_screen_scaffold.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/view/component/screen_util_text.dart';
 import '../../../common/view/component/screen_util_padding.dart';
@@ -9,28 +10,17 @@ import '../component/calendar.dart';
 import '../component/routines.dart';
 
 class RoutineScreen extends StatelessWidget {
-  const RoutineScreen({super.key});
+  const RoutineScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return RoutineScreenScaffold(
       appBar: _renderAppBar(),
-      body: ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Container(
-            padding: ScreenUtilPadding.symmetric(8, 16),
-            child: const Calendar(),
-          ),
-          Container(
-            margin: ScreenUtilPadding.symmetric(8, 8),
-            color: white,
-            height: 0.5,
-          ),
-          const Routines(),
-        ],
-      ),
+      calendar: renderCalendar(),
+      divider: renderDivider(),
+      routines: renderRoutines(),
     );
   }
 
@@ -62,5 +52,24 @@ class RoutineScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget renderCalendar() {
+    return Container(
+      padding: ScreenUtilPadding.symmetric(8, 16),
+      child: const Calendar(),
+    );
+  }
+
+  Widget renderDivider() {
+    return Container(
+      margin: ScreenUtilPadding.symmetric(8, 8),
+      color: white,
+      height: 0.5,
+    );
+  }
+
+  Widget renderRoutines() {
+    return const Routines();
   }
 }

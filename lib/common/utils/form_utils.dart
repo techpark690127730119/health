@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
-
 final partValidatorProvider = Provider<PartValidator>((ref) {
   return PartValidator();
 });
@@ -18,15 +16,12 @@ final formSubmitHelperProvider = Provider<FormSubmitHelper>((ref) {
 class FormUtils {}
 
 class PartValidator extends FormUtils {
-  String part = "";
-
   String? validate(String? value) {
     if (value == null) {
       return "추가할 부위를 입력해 주세요.";
     } else if (value.isEmpty) {
       return "추가할 부위를 입력해 주세요.";
     } else {
-      part = value.trim();
       return null;
     }
   }
@@ -37,9 +32,9 @@ class ExerciseValidator extends FormUtils {
 
   String? validate(String? value) {
     if (value == null) {
-      return "추가할 부위를 입력해 주세요.";
+      return "추가할 운동을 입력해 주세요.";
     } else if (value.isEmpty) {
-      return "추가할 부위를 입력해 주세요.";
+      return "추가할 운동을 입력해 주세요.";
     } else {
       exercise = value.trim();
       return null;

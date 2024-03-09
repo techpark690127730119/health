@@ -11,11 +11,17 @@ class HealthRoutine extends Table {
   IntColumn get dayId => integer()();
 
   // 부위
-  TextColumn get part => text().withLength(min: 1, max: 30)();
+  TextColumn get part => text().withLength(
+        min: 1,
+        max: 30,
+      )();
 
   // 운동
-  TextColumn get exercise => text().withLength(min: 1, max: 30)();
-  
+  TextColumn get exercise => text().withLength(
+        min: 1,
+        max: 30,
+      )();
+
   // 세트
   IntColumn get set => integer()();
 }

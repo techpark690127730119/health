@@ -14,16 +14,23 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
 });
 
-@DriftDatabase(tables: [
-  HealthRoutine,
-  Part,
-  Exercise,
-])
+@DriftDatabase(
+  tables: [
+    Part,
+    Exercise,
+    HealthRoutine,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase()
+      : super(
+          _openConnection(),
+        );
 
   // 부위 추가
-  Future<void> addPart({required PartCompanion newPart}) =>
+  Future<void> addPart({
+    required PartCompanion newPart,
+  }) =>
       into(part).insert(newPart);
 
   // 부위 업데이트
@@ -39,19 +46,19 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // 부위 삭제
-  Future<void> deletePart({required int id}) =>
+  Future<void> deletePart({
+    required int id,
+  }) =>
       (delete(part)..where((tbl) => tbl.id.equals(id))).go();
 
   // 부위 watch
   Stream<List<PartData>> watchPart() => (select(part)).watch();
 
   // 운동 추가
-  Future<void> addExercise({required ExerciseCompanion newExercise}) =>
+  Future<void> addExercise({
+    required ExerciseCompanion newExercise,
+  }) =>
       into(exercise).insert(newExercise);
-
-  // 운동 삭제
-  Future<void> deleteExercise({required int id}) =>
-      (delete(exercise)..where((tbl) => tbl.id.equals(id))).go();
 
   // 운동 업데이트
   Future<void> updateExercise({
@@ -65,6 +72,12 @@ class AppDatabase extends _$AppDatabase {
         .write(newExercise);
   }
 
+  // 운동 삭제
+  Future<void> deleteExercise({
+    required int id,
+  }) =>
+      (delete(exercise)..where((tbl) => tbl.id.equals(id))).go();
+
   // 운동 watch
   Stream<List<ExerciseData>> watchExercise({required String part}) {
     return (select(exercise)
@@ -75,12 +88,10 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // 루틴 추가
-  Future<void> addRoutine({required HealthRoutineCompanion newRoutine}) =>
+  Future<void> addRoutine({
+    required HealthRoutineCompanion newRoutine,
+  }) =>
       into(healthRoutine).insert(newRoutine);
-
-  // 부위 삭제
-  Future<void> deleteRoutine({required int id}) =>
-      (delete(healthRoutine)..where((tbl) => tbl.id.equals(id))).go();
 
   // 루틴 업데이트
   Future<void> updateRoutine({
@@ -94,7 +105,11 @@ class AppDatabase extends _$AppDatabase {
         .write(newRoutine);
   }
 
-  // 해당하는 하나의 루틴 get
+  // 루틴 삭제
+  Future<void> deleteRoutine({required int id}) =>
+      (delete(healthRoutine)..where((tbl) => tbl.id.equals(id))).go();
+
+  // 하나의 루틴 get
   Future<HealthRoutineData> getSingleRoutine({required int id}) {
     return (select(healthRoutine)
           ..where(
@@ -103,7 +118,7 @@ class AppDatabase extends _$AppDatabase {
         .getSingle();
   }
 
-  // 해당하는 모든 루틴 get
+  // 모든 루틴 get
   Future<List<HealthRoutineData>> getAllRoutine({required int dayId}) {
     return (select(healthRoutine)
           ..where(

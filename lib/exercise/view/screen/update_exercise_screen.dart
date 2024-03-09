@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,14 +12,18 @@ import '../../../common/view/component/custom_text_form_field.dart';
 import '../../../common/view/component/screen_util_text.dart';
 
 class UpdateExerciseScreen extends ConsumerWidget {
-  const UpdateExerciseScreen({super.key});
+  UpdateExerciseScreen({
+    super.key,
+  });
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       appBar: _renderAppBar(context: context, ref: ref),
       child: Form(
-        key: formKey1,
+        key:formKey,
         child: Column(
           children: [
             CustomTextFormField(
@@ -46,7 +52,7 @@ class UpdateExerciseScreen extends ConsumerWidget {
           GestureDetector(
             onTap: () {
               ref.read(formSubmitHelperProvider).submitForm(
-                    formKey: formKey1,
+                    formKey: formKey,
                     onSubmit: () {
                       ref.read(exerciseProvider.notifier).updateExercisse(
                             newExercise:

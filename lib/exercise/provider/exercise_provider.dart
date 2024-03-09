@@ -19,11 +19,20 @@ final partStreamProvider = StreamProvider<List<PartData>>((ref) {
 
 class ExerciseStateNotifier extends StateNotifier<ExerciseModel> {
   final AppDatabase appDatabase;
-  ExerciseStateNotifier({required this.appDatabase})
-      : super(ExerciseModel(null, null, null));
+  ExerciseStateNotifier({
+    required this.appDatabase,
+  }) : super(
+          ExerciseModel(
+            null,
+            null,
+            null,
+          ),
+        );
 
   // 부위 추가
-  void addPart({required String newPart}) {
+  void addPart({
+    required String newPart,
+  }) {
     appDatabase.addPart(
       newPart: PartCompanion.insert(
         part: newPart,
@@ -55,10 +64,13 @@ class ExerciseStateNotifier extends StateNotifier<ExerciseModel> {
   }
 
   // 운동 추가
-  void addExercise({required String newExercise}) {
+  void addExercise({
+    required String part,
+    required String newExercise,
+  }) {
     appDatabase.addExercise(
       newExercise: ExerciseCompanion.insert(
-        part: state.part!,
+        part: part,
         exercise: newExercise,
       ),
     );

@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final TextEditingController? textEditingController;
   final String? Function(String?)? validator;
 
   const CustomTextFormField({
@@ -16,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.autofocus = false,
     this.onChanged,
+    this.textEditingController,
     required this.validator,
     super.key,
   });
@@ -34,6 +36,7 @@ class CustomTextFormField extends StatelessWidget {
     return Container(
       padding: ScreenUtilPadding.symmetric(26, 6),
       child: TextFormField(
+        controller: textEditingController,
         style: baseTextStyle,
         validator: validator,
         cursorColor: white,
