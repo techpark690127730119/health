@@ -66,17 +66,6 @@ class ExerciseListScreen extends ConsumerWidget {
     );
   }
 
-  // ...defaultPart
-  //           .map(
-  //             (e) => Column(
-  //               children: [
-  //                 PartBar(part: e),
-  //                 Exercises(part: e),
-  //               ],
-  //             ),
-  //           )
-  //           .toList()
-
   List<Widget> renderDefaultParts() {
     return Data.defaultPart.map((defaultPart) {
       return Column(

@@ -1,3 +1,5 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +38,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
                     .map((e) => Container(
                           width: MediaQuery.of(context).size.width,
                           color: black,
-                          child: _renderExerciseCard(
+                          child: renderExerciseCard(
                             exerciseData: e,
                             isRoutine: widget.isRoutine,
                           ),
@@ -58,11 +60,10 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
               return exercise
                   .map((e) => GestureDetector(
                         onTap: () {
-                          ref.read(exerciseProvider.notifier).selectExercise(
-                                part: widget.part,
-                                exercise: e,
-                              );
-                          context.go("/exercise_screen/update_exercise_screen");
+                          context.go(
+                            "/exercise_screen/update_exercise_screen",
+                            extra: e,
+                          );
                         },
                         child: Dismissible(
                           key: ObjectKey("$e"),
@@ -74,7 +75,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             color: black,
-                            child: _renderExerciseCard(exerciseData: e),
+                            child: renderExerciseCard(exerciseData: e),
                           ),
                         ),
                       ))
@@ -90,7 +91,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
     );
   }
 
-  Widget _renderExerciseCard({
+  Widget renderExerciseCard({
     required ExerciseData exerciseData,
     bool? isRoutine,
   }) {
@@ -121,19 +122,17 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
   }
 }
 
-class SetButton extends ConsumerStatefulWidget {
+class SetButton extends HookConsumerWidget {
   final ExerciseData exerciseData;
-  const SetButton({required this.exerciseData, super.key});
+  const SetButton({
+    required this.exerciseData,
+    super.key,
+  });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SetButtonState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final set = useState(0);
 
-class _SetButtonState extends ConsumerState<SetButton> {
-  int set = 0;
-
-  @override
-  Widget build(BuildContext context) {
     final calendarState = ref.read(calendarProvider);
 
     // -, 세트 수, + 버튼 가로로  배치
@@ -141,17 +140,15 @@ class _SetButtonState extends ConsumerState<SetButton> {
       children: [
         GestureDetector(
           onTap: () {
-            if (set > 0) {
-              setState(() {
-                // 변경 사항 저장
-                ref.read(routineProvider.notifier).setSet(
-                      calendarModel: calendarState,
-                      exerciseData: widget.exerciseData,
-                      isMinus: true,
-                    );
-                // 세트 수 마이너스 1
-                set--;
-              });
+            if (set.value > 0) {
+              // 변경 사항 저장
+              ref.read(routineProvider.notifier).setSet(
+                    calendarModel: calendarState,
+                    exerciseData: exerciseData,
+                    isMinus: true,
+                  );
+              // 세트 수 마이너스 1
+              set.value--;
             }
           },
           child: const Icon(
@@ -162,21 +159,19 @@ class _SetButtonState extends ConsumerState<SetButton> {
         Padding(
           padding: ScreenUtilPadding.symmetric(6, 0),
           child: ScreenUtilText(
-            set.toString(),
+            set.value.toString(),
             size: 18,
           ),
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              // 변경 사항 저장
-              ref.read(routineProvider.notifier).setSet(
-                    calendarModel: calendarState,
-                    exerciseData: widget.exerciseData,
-                  );
-              // 세트 수 플러스 1
-              set++;
-            });
+            // 변경 사항 저장
+            ref.read(routineProvider.notifier).setSet(
+                  calendarModel: calendarState,
+                  exerciseData: exerciseData,
+                );
+            // 세트 수 플러스 1
+            set.value++;
           },
           child: const Icon(
             Icons.add,

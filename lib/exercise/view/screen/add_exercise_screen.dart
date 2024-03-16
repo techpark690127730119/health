@@ -1,16 +1,18 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:health_plans/exercise/provider/exercise_provider.dart';
+
 import '../../../common/const/colors.dart';
 import '../../../common/layout/default_layout.dart';
 import '../../../common/utils/form_utils.dart';
 import '../../../common/view/component/custom_text_form_field.dart';
 import '../../../common/view/component/screen_util_text.dart';
 
-class AddExerciseScreen extends ConsumerWidget {
+class AddExerciseScreen extends HookConsumerWidget {
   final String part;
 
   AddExerciseScreen({
@@ -23,12 +25,33 @@ class AddExerciseScreen extends ConsumerWidget {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  void addExcercise(
+    BuildContext context,
+    WidgetRef ref, {
+    required TextEditingController textEditingController,
+  }) {
+    ref.read(formSubmitHelperProvider).submitForm(
+          formKey: formKey,
+          onSubmit: () {
+            ref.read(exerciseProvider.notifier).addExercise(
+                  part: part,
+                  newExercise: ref.read(exerciseValidatorProvider).exercise,
+                );
+            context.pop();
+          },
+        );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController textEditingController =
+        useTextEditingController();
+
     return DefaultLayout(
       appBar: _renderAppBar(
-        context: context,
-        ref: ref,
+        context,
+        ref,
+        textEditingController: textEditingController,
       ),
       child: Form(
         key: formKey,
@@ -44,9 +67,10 @@ class AddExerciseScreen extends ConsumerWidget {
     );
   }
 
-  PreferredSizeWidget _renderAppBar({
-    required BuildContext context,
-    required WidgetRef ref,
+  PreferredSizeWidget _renderAppBar(
+    BuildContext context,
+    WidgetRef ref, {
+    required TextEditingController textEditingController,
   }) {
     return AppBar(
       title: Row(
@@ -58,19 +82,11 @@ class AddExerciseScreen extends ConsumerWidget {
             weight: FontWeight.w700,
           ),
           GestureDetector(
-            onTap: () {
-              ref.read(formSubmitHelperProvider).submitForm(
-                    formKey: formKey,
-                    onSubmit: () {
-                      ref.read(exerciseProvider.notifier).addExercise(
-                            part: part,
-                            newExercise:
-                                ref.read(exerciseValidatorProvider).exercise,
-                          );
-                      context.pop();
-                    },
-                  );
-            },
+            onTap: () => addExcercise(
+              context,
+              ref,
+              textEditingController: textEditingController,
+            ),
             child: const ScreenUtilText(
               "완료",
               color: red,
