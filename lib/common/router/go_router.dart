@@ -39,9 +39,7 @@ final GoRouter goRouter = GoRouter(
             GoRoute(
               path: "update_part_screen",
               builder: (context, state) {
-                return UpdatePartScreen(
-                  partData: state.extra as PartData,
-                );
+                return UpdatePartScreen(partData: state.extra as PartData);
               },
             ),
             GoRoute(
@@ -55,7 +53,7 @@ final GoRouter goRouter = GoRouter(
             GoRoute(
               path: "update_exercise_screen",
               builder: (context, state) => UpdateExerciseScreen(
-                 exerciseData: state.extra as ExerciseData,
+                exerciseData: state.extra as ExerciseData,
               ),
             ),
           ],

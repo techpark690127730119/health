@@ -22,22 +22,14 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   ],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
-      : super(
-          _openConnection(),
-        );
+  AppDatabase() : super(_openConnection());
 
   // 부위 추가
-  Future<void> addPart({
-    required PartCompanion newPart,
-  }) =>
+  Future<void> addPart({required PartCompanion newPart}) =>
       into(part).insert(newPart);
 
   // 부위 업데이트
-  Future<void> updatePart({
-    required int id,
-    required PartCompanion newPart,
-  }) {
+  Future<void> updatePart({required int id, required PartCompanion newPart}) {
     return (update(part)
           ..where(
             (tbl) => tbl.id.equals(id),
@@ -46,18 +38,14 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // 부위 삭제
-  Future<void> deletePart({
-    required int id,
-  }) =>
+  Future<void> deletePart({required int id}) =>
       (delete(part)..where((tbl) => tbl.id.equals(id))).go();
 
   // 부위 watch
   Stream<List<PartData>> watchPart() => (select(part)).watch();
 
   // 운동 추가
-  Future<void> addExercise({
-    required ExerciseCompanion newExercise,
-  }) =>
+  Future<void> addExercise({required ExerciseCompanion newExercise}) =>
       into(exercise).insert(newExercise);
 
   // 운동 업데이트
@@ -73,9 +61,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // 운동 삭제
-  Future<void> deleteExercise({
-    required int id,
-  }) =>
+  Future<void> deleteExercise({required int id}) =>
       (delete(exercise)..where((tbl) => tbl.id.equals(id))).go();
 
   // 운동 watch
@@ -88,9 +74,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // 루틴 추가
-  Future<void> addRoutine({
-    required HealthRoutineCompanion newRoutine,
-  }) =>
+  Future<void> addRoutine({required HealthRoutineCompanion newRoutine}) =>
       into(healthRoutine).insert(newRoutine);
 
   // 루틴 업데이트

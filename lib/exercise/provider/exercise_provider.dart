@@ -1,66 +1,64 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:health_plans/exercise/state/exercise_state.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../drift/database/database.dart';
+part 'exercise_provider.g.dart';
 
-final exerciseProvider =
-    StateNotifierProvider<ExerciseStateNotifier, Object?>((ref) {
-  return ExerciseStateNotifier(appDatabase: ref.read(databaseProvider));
-});
+@riverpod
+Stream<List<PartData>> partStream(PartStreamRef ref) {
+  final AppDatabase appDatabase = ref.read(databaseProvider);
+  return appDatabase.watchPart();
+}
 
-final exerciseStreamProvider =
-    StreamProvider.family<List<ExerciseData>, String>((ref, part) {
-  return ref.watch(exerciseProvider.notifier).watchExercise(part: part);
-});
+@riverpod
+Stream<List<ExerciseData>> exerciseStream(
+  ExerciseStreamRef ref, {
+  required String part,
+}) {
+  final AppDatabase appDatabase = ref.read(databaseProvider);
+  return appDatabase.watchExercise(part: part);
+}
 
-final partStreamProvider = StreamProvider<List<PartData>>((ref) {
-  return ref.watch(exerciseProvider.notifier).watchPart();
-});
-
-class ExerciseStateNotifier extends StateNotifier<Object?> {
-  final AppDatabase appDatabase;
-  ExerciseStateNotifier({required this.appDatabase}) : super(null);
+@Riverpod(keepAlive: true)
+class ExerciseNotifier extends _$ExerciseNotifier {
+  @override
+  ExerciseState build() => Initinal();
 
   // 부위 추가
-  void addPart({
-    required String newPart,
-  }) {
-    appDatabase.addPart(
-      newPart: PartCompanion.insert(
-        part: newPart,
-      ),
-    );
+  Future<bool> addPart({required String newPart}) async {
+    try {} catch (e) {}
+    try {
+      throw UnimplementedError();
+      final AppDatabase appDatabase = ref.read(databaseProvider);
+      await appDatabase.addPart(
+        newPart: PartCompanion.insert(part: newPart),
+      );
+      return true;
+    } catch (e) {
+      state = ExerciseError();
+      return false;
+    }
   }
 
   // 부위 업데이트
-  void updatePart({
-    required int id,
-    required String newPart,
-  }) {
+  void updatePart({required int id, required String newPart}) {
+    final AppDatabase appDatabase = ref.read(databaseProvider);
     appDatabase.updatePart(
       id: id,
-      newPart: PartCompanion.insert(
-        part: newPart,
-      ),
+      newPart: PartCompanion.insert(part: newPart),
     );
   }
 
   // 부위 삭제
-  void deletePart({
-    required int id,
-  }) {
+  void deletePart({required int id}) {
+    final AppDatabase appDatabase = ref.read(databaseProvider);
     appDatabase.deletePart(id: id);
   }
 
-  // 부위 watch
-  Stream<List<PartData>> watchPart() {
-    return appDatabase.watchPart();
-  }
-
   // 운동 추가
-  void addExercise({
-    required String part,
-    required String newExercise,
-  }) {
+  void addExercise({required String part, required String newExercise}) {
+    final AppDatabase appDatabase = ref.read(databaseProvider);
     appDatabase.addExercise(
       newExercise: ExerciseCompanion.insert(
         part: part,
@@ -70,17 +68,15 @@ class ExerciseStateNotifier extends StateNotifier<Object?> {
   }
 
   // 운동 삭제
-  void deleteExercisse({
-    required int id,
-  }) {
+  void deleteExercisse({required int id}) {
+    final AppDatabase appDatabase = ref.read(databaseProvider);
     appDatabase.deleteExercise(id: id);
   }
 
   // 운동 업데이트
-  void updateExercisse({
-    required ExerciseData exerciseData,
-    required String newExercise,
-  }) {
+  void updateExercisse(
+      {required ExerciseData exerciseData, required String newExercise}) {
+    final AppDatabase appDatabase = ref.read(databaseProvider);
     appDatabase.updateExercise(
       id: exerciseData.id,
       newExercise: ExerciseCompanion.insert(
@@ -88,12 +84,5 @@ class ExerciseStateNotifier extends StateNotifier<Object?> {
         exercise: newExercise,
       ),
     );
-  }
-
-  // 운동 watch
-  Stream<List<ExerciseData>> watchExercise({
-    required String part,
-  }) {
-    return appDatabase.watchExercise(part: part);
   }
 }

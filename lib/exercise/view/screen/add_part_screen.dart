@@ -1,4 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:health_plans/common/utils/snack_bar_util.dart';
+import 'package:health_plans/exercise/state/exercise_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 // ignore_for_file: constant_identifier_names
 
@@ -24,21 +26,31 @@ class AddPartScreen extends HookConsumerWidget {
     WidgetRef ref, {
     required TextEditingController textEditingController,
   }) {
-    ref
-        .read(
-          exerciseProvider.notifier,
-        )
-        .addPart(
-          newPart: textEditingController.text.trim(),
+    ref.read(formSubmitHelperProvider).submitForm(
+          formKey: formKey,
+          onSubmit: () {
+            ref
+                .read(exerciseNotifierProvider.notifier)
+                .addPart(newPart: textEditingController.text.trim())
+                .then((value) {
+              if (value) {
+                context.pop();
+              }
+            });
+          },
         );
-
-    context.pop();
   }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(exerciseNotifierProvider, (previous, next) {
+      if (next is ExerciseError) {
+        SnackBarUtils.snackBar(context, text: "잠시 후 다시 시도해 주세요");
+      }
+    });
+
     final TextEditingController textEditingController =
         useTextEditingController();
 
@@ -53,11 +65,7 @@ class AddPartScreen extends HookConsumerWidget {
         child: CustomTextFormField(
           textEditingController: textEditingController,
           hintText: "부위",
-          validator: ref
-              .read(
-                partValidatorProvider,
-              )
-              .validate,
+          validator: ref.read(partValidatorProvider).validate,
         ),
       ),
     );

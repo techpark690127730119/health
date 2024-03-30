@@ -33,7 +33,7 @@ class AddExerciseScreen extends HookConsumerWidget {
     ref.read(formSubmitHelperProvider).submitForm(
           formKey: formKey,
           onSubmit: () {
-            ref.read(exerciseProvider.notifier).addExercise(
+            ref.read(exerciseNotifierProvider.notifier).addExercise(
                   part: part,
                   newExercise: ref.read(exerciseValidatorProvider).exercise,
                 );
@@ -57,11 +57,7 @@ class AddExerciseScreen extends HookConsumerWidget {
         key: formKey,
         child: CustomTextFormField(
           hintText: "운동",
-          validator: ref
-              .read(
-                exerciseValidatorProvider,
-              )
-              .validate,
+          validator: ref.read(exerciseValidatorProvider).validate,
         ),
       ),
     );

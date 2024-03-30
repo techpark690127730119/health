@@ -31,7 +31,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
     if (widget.isRoutine != null) {
       return Column(
         // 1. 부위 받아서 부위에 해당하는 운동 검색해서 가져옴
-        children: ref.watch(exerciseStreamProvider(widget.part)).when(
+        children: ref.watch(exerciseStreamProvider(part: widget.part)).when(
               data: (exercise) {
                 // 2. 운동 가져와서 _renderExerciseCard로 맵핑
                 return exercise
@@ -55,7 +55,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
       );
     }
     return Column(
-      children: ref.watch(exerciseStreamProvider(widget.part)).when(
+      children: ref.watch(exerciseStreamProvider(part: widget.part)).when(
             data: (exercise) {
               return exercise
                   .map((e) => GestureDetector(
@@ -69,7 +69,7 @@ class _ExerciseCardState extends ConsumerState<Exercises> {
                           key: ObjectKey("$e"),
                           onDismissed: (direction) {
                             ref
-                                .read(exerciseProvider.notifier)
+                                .read(exerciseNotifierProvider.notifier)
                                 .deleteExercisse(id: e.id);
                           },
                           child: Container(

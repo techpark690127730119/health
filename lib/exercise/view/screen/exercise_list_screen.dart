@@ -29,7 +29,7 @@ class ExerciseListScreen extends ConsumerWidget {
   }) {
     ref
         .read(
-          exerciseProvider.notifier,
+          exerciseNotifierProvider.notifier,
         )
         .deletePart(
           id: partData.id,

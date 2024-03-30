@@ -68,7 +68,7 @@ class UpdateExerciseScreen extends HookConsumerWidget {
               ref.read(formSubmitHelperProvider).submitForm(
                     formKey: formKey,
                     onSubmit: () {
-                      ref.read(exerciseProvider.notifier).updateExercisse(
+                      ref.read(exerciseNotifierProvider.notifier).updateExercisse(
                             exerciseData: exerciseData,
                             newExercise: textEditingController.text.trim(),
                           );

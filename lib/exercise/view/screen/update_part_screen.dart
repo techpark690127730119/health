@@ -31,18 +31,10 @@ class UpdatePartScreen extends HookConsumerWidget {
     WidgetRef ref, {
     required TextEditingController textEditingController,
   }) {
-    ref
-        .read(
-          formSubmitHelperProvider,
-        )
-        .submitForm(
+    ref.read(formSubmitHelperProvider).submitForm(
           formKey: formKey,
           onSubmit: () {
-            ref
-                .read(
-                  exerciseProvider.notifier,
-                )
-                .updatePart(
+            ref.read(exerciseNotifierProvider.notifier).updatePart(
                   id: partData.id,
                   newPart: textEditingController.text.trim(),
                 );
