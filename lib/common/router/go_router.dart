@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health_plans/common/view/screen/root_screen.dart';
 import 'package:health_plans/drift/database/database.dart';
 import 'package:health_plans/exercise/view/screen/exercise_list_screen.dart';
-import 'package:health_plans/routine/view/screen/routine_screen.dart';
 import '../../exercise/view/screen/add_exercise_screen.dart';
 import '../../exercise/view/screen/add_part_screen.dart';
 import '../../exercise/view/screen/update_exercise_screen.dart';
@@ -18,7 +18,7 @@ final GoRouter goRouter = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => const RoutineScreen(),
+      builder: (context, state) => const RootScreen(),
       routes: [
         GoRoute(
           path: "add_routine_screen",

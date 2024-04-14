@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_plans/common/const/colors.dart';
+import 'package:health_plans/timer/view/screen/timer_screen.dart';
 
 import '../../../routine/view/screen/routine_screen.dart';
 import '../../layout/default_layout.dart';
@@ -68,7 +69,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
           controller: _tabController,
           children: const [
             RoutineScreen(),
-            SizedBox(),
+            StopwatchScreen(),
           ],
         ),
       ),

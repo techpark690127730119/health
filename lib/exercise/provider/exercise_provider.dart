@@ -27,9 +27,7 @@ class ExerciseNotifier extends _$ExerciseNotifier {
 
   // 부위 추가
   Future<bool> addPart({required String newPart}) async {
-    try {} catch (e) {}
     try {
-      throw UnimplementedError();
       final AppDatabase appDatabase = ref.read(databaseProvider);
       await appDatabase.addPart(
         newPart: PartCompanion.insert(part: newPart),
