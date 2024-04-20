@@ -69,7 +69,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
           controller: _tabController,
           children: const [
             RoutineScreen(),
-            StopwatchScreen(),
+            CountDownTimerScreen(),
           ],
         ),
       ),
