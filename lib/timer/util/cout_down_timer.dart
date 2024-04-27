@@ -46,7 +46,7 @@ class CountdownTimer {
     onPausedCalled = true;
     // 타이머 멈춘다 (타이머는 어차피 마지막 시간만 알면 그대로 다시 생성할 수 있기 때문)
     stop();
-    // 마지막 시간 기록 
+    // 마지막 시간 기록
     timerHandler.setEndingTime(endTime);
   }
 
