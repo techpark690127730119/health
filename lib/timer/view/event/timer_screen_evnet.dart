@@ -43,7 +43,10 @@ mixin CountDownTimerScreenEvent on State<CountDownTimerScreen> {
           countdownSeconds = seconds;
         });
       },
-      onFinished: () => stopTimer(),
+      onFinished: () {
+        stopTimer();
+        resetAnima();
+      },
     );
 
     isTimerRunning = true;

@@ -88,6 +88,7 @@ class Routines extends ConsumerWidget {
   }) {
     // 여러 개의 루틴을 itemCount 만큼 itemBuilder로 감싸서 리턴해 준다.
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: routines.length,
       itemBuilder: (context, index) {
         final routine = routines[index];

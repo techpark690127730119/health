@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_plans/common/layout/default_layout.dart';
 
-class RoutineScreenScaffold extends StatelessWidget {
+class RoutineScreenScaffold extends StatefulWidget {
   // 앱바
   final PreferredSizeWidget appBar;
 
@@ -23,18 +23,48 @@ class RoutineScreenScaffold extends StatelessWidget {
   });
 
   @override
+  State<RoutineScreenScaffold> createState() => _RoutineScreenScaffoldState();
+}
+
+class _RoutineScreenScaffoldState extends State<RoutineScreenScaffold>
+    with SingleTickerProviderStateMixin {
+  double _scrollOffset = 0.0;
+
+  @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      appBar: appBar,
-      child: ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          calendar,
-          divider,
-          routines,
-        ],
+      appBar: widget.appBar,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          setState(() {
+            _scrollOffset = scrollInfo.metrics.pixels;
+          });
+          return true;
+        },
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            Transform.scale(
+              scale: _calculateScale(),
+              child: widget.calendar,
+            ),
+            widget.divider,
+            widget.routines,
+          ],
+        ),
       ),
     );
+  }
+
+  double _calculateScale() {
+    double minScale = 0.5; // 캘린더의 최소 스케일
+    double maxScrollExtent = 300.0; // 스크롤 범위
+
+    double scale = 1.0 - (_scrollOffset / maxScrollExtent);
+    if (scale < minScale) {
+      return minScale;
+    }
+    return scale;
   }
 }
