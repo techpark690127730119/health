@@ -9,7 +9,7 @@ mixin CountDownTimerScreenEvent on State<CountDownTimerScreen> {
 
   bool isTimerRunning = false;
 
-  late CountdownTimer countdownTimer;
+  late CountdownTimer? countdownTimer;
   late AnimationController animationController;
   late Animation<double> stopWatchScale;
   late Animation<double> timeSelectionFieldScale;
@@ -50,12 +50,14 @@ mixin CountDownTimerScreenEvent on State<CountDownTimerScreen> {
     );
 
     isTimerRunning = true;
-    countdownTimer.start();
+    countdownTimer!.start();
   }
 
   void stopTimer() {
-    isTimerRunning = false;
-    countdownTimer.stop();
+    if (isTimerRunning) {
+      isTimerRunning = false;
+      countdownTimer!.stop();
+    }
   }
 
   void resetTimer() {

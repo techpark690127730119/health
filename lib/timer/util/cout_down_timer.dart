@@ -75,6 +75,7 @@ class TimerCirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    
     Paint paint = Paint()
       ..color = backgroundColor
       ..strokeWidth = 10.0

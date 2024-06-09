@@ -27,13 +27,13 @@ class _CountDownTimerScreenState extends State<CountDownTimerScreen>
     SystemChannels.lifecycle.setMessageHandler((msg) {
       if (msg == AppLifecycleState.paused.toString()) {
         if (isTimerRunning) {
-          countdownTimer.pause(countdownSeconds);
+          countdownTimer!.pause(countdownSeconds);
         }
       }
 
       if (msg == AppLifecycleState.resumed.toString()) {
         if (isTimerRunning) {
-          countdownTimer.resume();
+          countdownTimer!.resume();
         }
       }
 
@@ -70,7 +70,7 @@ class _CountDownTimerScreenState extends State<CountDownTimerScreen>
                     buildTimeField(
                       title: "초",
                       minValue: 0,
-                      maxValue: 60,
+                      maxValue: 59,
                       currentValue: second,
                       textMapper: secondMapper,
                       onChanged: onSecondChanged,
@@ -83,7 +83,9 @@ class _CountDownTimerScreenState extends State<CountDownTimerScreen>
               scale: stopWatchScale,
               child: CustomPaint(
                 painter: TimerCirclePainter(
-                  progress: countdownSeconds / (minute * 60 + second),
+                  progress: (countdownSeconds / (minute * 60 + second)).isNaN
+                      ? 1
+                      : (countdownSeconds / (minute * 60 + second)),
                   backgroundColor: Colors.grey,
                   color: Colors.blue,
                 ),
